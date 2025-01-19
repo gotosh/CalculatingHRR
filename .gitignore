@@ -1,0 +1,9 @@
+*.png
+*.tif
+*.tiff
+*.docx
+*.pdf
+*.pptx
+*.jpg
+/build
+/.vscode
