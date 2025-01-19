@@ -58,7 +58,7 @@ ParseJSON::ParseJSON(std::string fileName_json)
         
 }
 
-void ParseJSON::SetGeometry(Geometry& geometry){
+void ParseJSON::set_geometry(Geometry& geometry){
     geometry.burner_center_x = _center;
     geometry.left = _left;
     geometry.right = _right;

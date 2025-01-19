@@ -14,8 +14,15 @@ class ImageProcess
 {
 private:
     /* data */
+    Mat img_plif;
+    Mat img_chemilumi;
+    Geometry& geometry;
+
 public:
-    ImageProcess(std::string fileName_plif, std::string fileName_chemilumi, std::string fineName_geometry);
+    ImageProcess(std::string fileName_plif, std::string fileName_chemilumi, Geometry& geometry);
+    int get_flame_position();
+    void normalized_intensity();
+    void pixel_to_coordinate();
     ~ImageProcess();
 };
 

@@ -19,7 +19,7 @@ private:
     
 public:
     ParseJSON(std::string fileName_json);
-    void SetGeometry(Geometry& geometry);
+    void set_geometry(Geometry& geometry);
     ~ParseJSON();
 };
 

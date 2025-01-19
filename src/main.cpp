@@ -17,19 +17,30 @@ int main()
 {
     /* test */
     std::string image_path = "./image/AVG_0kV_plif_1.tif";
-    Mat img = imread(image_path, IMREAD_COLOR);
-    std::cout << typeid(img).name() << std::endl;
+    Mat img = imread(image_path, IMREAD_UNCHANGED);
+    switch (img.depth())
+    {
+    case CV_8U:
+        std::cout << "The image is 8 bit" << std::endl;
+        break;
+    case CV_16U:
+        std::cout << "The image is 16 bit" << std::endl;
+    
+    default:
+        break;
+    }
+    std::cout << img.row(400) << std::endl;
 
     imshow("Display window", img);
     int k = waitKey(1000); // Wait for a keystroke in the window
     destroyAllWindows(); 
     Geometry geometry_OH;
-    ParseJSON scale_OH("./scale_oh.json");
-    scale_OH.SetGeometry(geometry_OH);
-    std::cout << geometry_OH.burner_center_x << std::endl;
-    std::cout << geometry_OH.scale_calibration << std::endl;
-    std::cout << geometry_OH.fiveORten_mm << std::endl;
-    std::cout << geometry_OH.left << std::endl;
+    Geometry geometry_CH2O;
+    ParseJSON scale_OH("./scale_ch2o.json");
+    scale_OH.set_geometry(geometry_OH);
+
+    ImageProcess imageprocess(image_path, "./image/AVG_chemilumi_0kV.tif", geometry_OH);
+    std::cout << imageprocess.get_flame_position() << std::endl;
     return 0;
 }
 
