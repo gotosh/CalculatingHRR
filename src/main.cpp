@@ -50,6 +50,7 @@ void run_all_task(
 
 int main()
 {
+    /* 0kV HRR */
     run_all_task(
         "./image/AVG_0kV_ohplif.tif",
         "./image/AVG_0kv_ohchemi.tif",
@@ -57,7 +58,50 @@ int main()
         "./image/AVG_0kV_plif_ch2o.tif",
         "./image/AVG_0kV_chemilumi_ch2o.tif",
         "./scale_ch2o.json",
-        "test.tif"
+        "HRR_0kV.tif"
+    );
+
+    /* +5kV HRR */
+    run_all_task(
+        "./image/AVG_5kV_plif_oh.tif",
+        "./image/AVG_5kV_chemilumi_oh.tif",
+        "./scale_oh.json",
+        "./image/AVG_5kV_plif_ch2o.tif",
+        "./image/AVG_5kV_chemilumi_ch2o.tif",
+        "./scale_ch2o.json",
+        "HRR_5kV.tif"
+    );
+
+    /* -5kV HRR */ 
+    run_all_task(
+        "./image/AVG_-5kV_plif_oh.tif",
+        "./image/AVG_-5kV_chemilumi_oh.tif",
+        "./scale_oh.json",
+        "./image/AVG_-5kV_plif_ch2o.tif",
+        "./image/AVG_-5kV_chemilumi_ch2o.tif",
+        "./scale_ch2o.json",
+        "HRR_-5kV.tif"
+    );
+
+    /* +7.5 kV HRR */
+    run_all_task(
+        "./image/AVG_7_5kV_plif_oh.tif",
+        "./image/AVG_7_5kV_chemilumi_oh.tif",
+        "./scale_oh.json",
+        "./image/AVG_7_5kV_plif_ch2o.tif",
+        "./image/AVG_7_5kV_chemilumi_ch2o.tif",
+        "./scale_ch2o.json",
+        "HRR_7_5kV.tif"
+    );
+    /* -7_5kV HRR */
+    run_all_task(
+        "./image/AVG_-7_5kV_plif_oh.tif",
+        "./image/AVG_-7_5kV_chemilumi_oh.tif",
+        "./scale_oh.json",
+        "./image/AVG_-7_5kV_plif_ch2o.tif",
+        "./image/AVG_-7_5kV_chemilumi_ch2o.tif",
+        "./scale_ch2o.json",
+        "HRR_-7_5kV.tif"
     );
 
 
