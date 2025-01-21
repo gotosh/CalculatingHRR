@@ -15,6 +15,7 @@ set(
     src/main.cpp
     src/ImageProcess.cpp
     src/ParseJSON.cpp
+    src/CalculateHRR.cpp
 )
 
 # 実行ファイル名を設定

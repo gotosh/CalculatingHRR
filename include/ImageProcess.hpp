@@ -17,12 +17,17 @@ private:
     Mat img_plif;
     Mat img_chemilumi;
     Geometry& geometry;
+    int centerwidth_pixel;
+    Mat aroundcenter_img_chemilumi;
+    Mat aroundcenter_img_plif;
+
 
 public:
     ImageProcess(std::string fileName_plif, std::string fileName_chemilumi, Geometry& geometry);
     int get_flame_position();
     void normalized_intensity();
-    void pixel_to_coordinate();
+    void pixel_to_coordinate(int flame_position);
+    Mat& getImage_plif();
     ~ImageProcess();
 };
 
