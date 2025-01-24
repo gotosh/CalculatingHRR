@@ -42,6 +42,7 @@ void CalculateHRR::Product_HRR(CalculateHRR& other_class, std::string saved_path
 
     Mat product;
     multiply(img_plif, other_class.img_plif, product);
+    cv::normalize(product, product, 0, 65535, cv::NORM_MINMAX, CV_16U);
     imwrite(saved_path, product);
         
 }

@@ -27,8 +27,9 @@ void run_all_task(
     ParseJSON scale_OH(scale_path_OH);
     scale_OH.set_geometry(geometry_OH);
     ImageProcess imageprocess_OH(image_path_OH_PLIF, image_path_OH_chemilumi, geometry_OH);
-    int flame_position_OH = imageprocess_OH.get_flame_position();
+    int flame_position_OH = imageprocess_OH.get_flame_position() - static_cast<int>(1.0 / geometry_OH.scale_calibration) ;
     imageprocess_OH.normalized_intensity();
+    // imageprocess_OH.cut_threshold_value(0.1);
     Mat& OH_plif_ref = imageprocess_OH.getImage_plif();
 
     ParseJSON scale_CH2O(scale_path_CH2O);
@@ -36,6 +37,7 @@ void run_all_task(
     ImageProcess imageprocess_CH2O(image_path_CH2O_PLIF, image_path_CH2O_chemilumi, geometry_CH2O);
     int flame_position_CH2O = imageprocess_CH2O.get_flame_position();
     imageprocess_CH2O.normalized_intensity();
+    imageprocess_CH2O.cut_threshold_value(0.35);
     Mat& CH2O_plif_ref = imageprocess_CH2O.getImage_plif();
 
     CalculateHRR calculate_OH(OH_plif_ref, geometry_OH);
@@ -103,7 +105,20 @@ int main()
         "./scale_ch2o.json",
         "HRR_-7_5kV.tif"
     );
+    Geometry geometry;
+    ParseJSON s("./scale_oh.json");
+    s.set_geometry(geometry);
 
+    ImageProcess imagep("./image/AVG_7_5kV_plif_ch2o.tif", "./image/AVG_7_5kV_chemilumi_ch2o.tif", geometry);
+    imagep.cut_threshold_value(0.4);
+    int flameposi = imagep.get_flame_position();
+    imagep.normalized_intensity();
+    Mat& image = imagep.getImage_plif();
+    CalculateHRR c(image, geometry);
+    c.convert_geometry(flameposi, 10, 5);
+
+    imagep.SaveImgplif("test_file.tif");
+    std::cout << geometry.scale_calibration;
 
     return 0;
 }

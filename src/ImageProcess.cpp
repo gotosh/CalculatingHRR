@@ -56,9 +56,22 @@ Mat& ImageProcess::getImage_plif() {
     return img_plif;
 }
 
+void ImageProcess::cut_threshold_value(double thresholdconst) {
+    double maxVal, thresholdVal;
+    Point maxLoc;
+    minMaxLoc(img_plif, nullptr, &maxVal, nullptr, &maxLoc);
+    thresholdVal = maxVal * thresholdconst;
+    threshold(img_plif, img_plif, thresholdVal, maxVal, 3);
+}
+
 void ImageProcess::pixel_to_coordinate(int flame_position) {
     // Recast region is 20 mm * 10 mm
 }
+
+void ImageProcess::SaveImgplif(std::string file_path) {
+    imwrite(file_path, img_plif);
+}
+
 
 ImageProcess::~ImageProcess()
 {

@@ -13,9 +13,9 @@ class CalculateHRR
 {
 private:
     int l;
-    Mat img_plif;
-    Mat img_oh;
-    Geometry geometry;
+    Mat& img_plif;
+    // Mat& img_oh;
+    Geometry& geometry;
 public:
     CalculateHRR(Mat& image_plif, Geometry& geometry);
     void Product_HRR(CalculateHRR& other_class, std::string saved_path);

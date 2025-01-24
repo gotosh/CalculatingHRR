@@ -28,6 +28,8 @@ public:
     void normalized_intensity();
     void pixel_to_coordinate(int flame_position);
     Mat& getImage_plif();
+    void cut_threshold_value(double thresholdconst);
+    void SaveImgplif(std::string file_path);
     ~ImageProcess();
 };
 
