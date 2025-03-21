@@ -33,7 +33,7 @@ void ImageProcess::normalized_intensity(){
     Mat rowMean;
     double minVal, maxVal;
     Point minLoc, maxLoc;
-    std::cout << "Image type: " << img_plif.type() << std::endl;
+    // std::cout << "Image type: " << img_plif.type() << std::endl;
     
     reduce(aroundcenter_img_plif, rowMean, 1, REDUCE_AVG, CV_32F); // Average row direction
     minMaxLoc(rowMean, &minVal, &maxVal, &minLoc, &maxLoc);

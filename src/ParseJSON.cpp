@@ -73,11 +73,11 @@ void ParseJSON::set_geometry(Geometry& geometry){
     if (_10mm == -1)
     {
         geometry.fiveORten_mm = _5mm;
-        geometry.burner_inlet_y = static_cast<int>(_5mm + 5 * geometry.scale_calibration);
+        geometry.burner_inlet_y = static_cast<int>(_5mm + 5.0 / geometry.scale_calibration);
     } else if (_5mm == -1)
     {
         geometry.fiveORten_mm = _10mm;
-        geometry.burner_inlet_y = static_cast<int>(_10mm + 10 * geometry.scale_calibration);
+        geometry.burner_inlet_y = static_cast<int>(_10mm + 10.0 / geometry.scale_calibration);
     } else {
         std::cerr << "Something wrong has happened when Parse JSON file! " << std::endl;
     }

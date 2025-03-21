@@ -28,6 +28,10 @@ void run_all_task(
     scale_OH.set_geometry(geometry_OH);
     ImageProcess imageprocess_OH(image_path_OH_PLIF, image_path_OH_chemilumi, geometry_OH);
     int flame_position_OH = imageprocess_OH.get_flame_position() - static_cast<int>(1.0 / geometry_OH.scale_calibration) ;
+    std::cout << "OH_path: " << image_path_OH_PLIF << std::endl;
+    std::cout << "OH flame position [pixel]: " << flame_position_OH << std::endl;
+    double flame_position_mm_OH = geometry_OH.scale_calibration * (geometry_OH.burner_inlet_y - flame_position_OH);
+    std::cout << "OH flame position [mm]: " << flame_position_mm_OH << std::endl;
     imageprocess_OH.normalized_intensity();
     // imageprocess_OH.cut_threshold_value(0.1);
     Mat& OH_plif_ref = imageprocess_OH.getImage_plif();
@@ -36,6 +40,10 @@ void run_all_task(
     scale_CH2O.set_geometry(geometry_CH2O);
     ImageProcess imageprocess_CH2O(image_path_CH2O_PLIF, image_path_CH2O_chemilumi, geometry_CH2O);
     int flame_position_CH2O = imageprocess_CH2O.get_flame_position();
+    std::cout << "CH2O_path: " << image_path_CH2O_PLIF << std::endl;
+    std::cout << "flame position [pixel]: " << flame_position_CH2O << std::endl;
+    double flame_position_mm_CH2O = geometry_CH2O.scale_calibration * (geometry_CH2O.burner_inlet_y - flame_position_CH2O );
+    std::cout << "flame position [mm]: " << flame_position_mm_CH2O << std::endl;
     imageprocess_CH2O.normalized_intensity();
     imageprocess_CH2O.cut_threshold_value(0.35);
     Mat& CH2O_plif_ref = imageprocess_CH2O.getImage_plif();
