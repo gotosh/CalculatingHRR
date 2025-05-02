@@ -33,7 +33,7 @@ void run_all_task(
     double flame_position_mm_OH = geometry_OH.scale_calibration * (geometry_OH.burner_inlet_y - flame_position_OH);
     std::cout << "OH flame position [mm]: " << flame_position_mm_OH << std::endl;
     imageprocess_OH.normalized_intensity();
-    // imageprocess_OH.cut_threshold_value(0.1);
+    imageprocess_OH.cut_threshold_value(0.1);
     Mat& OH_plif_ref = imageprocess_OH.getImage_plif();
 
     ParseJSON scale_CH2O(scale_path_CH2O);
@@ -45,7 +45,7 @@ void run_all_task(
     double flame_position_mm_CH2O = geometry_CH2O.scale_calibration * (geometry_CH2O.burner_inlet_y - flame_position_CH2O );
     std::cout << "flame position [mm]: " << flame_position_mm_CH2O << std::endl;
     imageprocess_CH2O.normalized_intensity();
-    imageprocess_CH2O.cut_threshold_value(0.25);
+    imageprocess_CH2O.cut_threshold_value(0.20);
     imageprocess_CH2O.SaveImgplif("test.tif");
     Mat& CH2O_plif_ref = imageprocess_CH2O.getImage_plif();
 
@@ -66,7 +66,7 @@ int main()
         "./image/oh_75Calib/0kV_plif_1_oh.tif",
         "./image/oh_chem/0kV_chem_1_oh.tif",
         "./scale_oh.json",
-        "./image/ch2o_90Calib/0kV_plif_1_ch2o.tif",
+        "./image/ch2o_75Calib/0kV_plif_1_ch2o.tif",
         "./image/ch2o_chem/0kV_chem_1_ch2o.tif",
         "./scale_ch2o.json",
         "HRR_0kV_1.tif"
@@ -77,7 +77,7 @@ int main()
         "./image/oh_75Calib/0kV_plif_2_oh.tif",
         "./image/oh_chem/0kV_chem_2_oh.tif",
         "./scale_oh.json",
-        "./image/ch2o_90Calib/0kV_plif_3_ch2o.tif",
+        "./image/ch2o_75Calib/0kV_plif_3_ch2o.tif",
         "./image/ch2o_chem/0kV_chem_2_ch2o.tif",
         "./scale_ch2o.json",
         "HRR_0kV_2.tif"
@@ -88,7 +88,7 @@ int main()
         "./image/oh_75Calib/5kV_plif_1_oh.tif",
         "./image/oh_chem/5kV_chem_1_oh.tif",
         "./scale_oh.json",
-        "./image/ch2o_90Calib/5kV_plif_1_ch2o.tif",
+        "./image/ch2o_75Calib/5kV_plif_1_ch2o.tif",
         "./image/ch2o_chem/5kV_chem_1_ch2o.tif",
         "./scale_ch2o.json",
         "HRR_5kV_1.tif"
@@ -99,7 +99,7 @@ int main()
         "./image/oh_75Calib/5kV_plif_2_oh.tif",
         "./image/oh_chem/5kV_chem_2_oh.tif",
         "./scale_oh.json",
-        "./image/ch2o_90Calib/5kV_plif_2_ch2o.tif",
+        "./image/ch2o_75Calib/5kV_plif_2_ch2o.tif",
         "./image/ch2o_chem/5kV_chem_2_ch2o.tif",
         "./scale_ch2o.json",
         "HRR_5kV_2.tif"
@@ -110,7 +110,7 @@ int main()
         "./image/oh_75Calib/-5kV_plif_1_oh.tif",
         "./image/oh_chem/-5kV_chem_1_oh.tif",
         "./scale_oh.json",
-        "./image/ch2o_90Calib/-5kV_plif_1_ch2o.tif",
+        "./image/ch2o_75Calib/-5kV_plif_1_ch2o.tif",
         "./image/ch2o_chem/-5kV_chem_1_ch2o.tif",
         "./scale_ch2o.json",
         "HRR_-5kV_1.tif"
@@ -121,7 +121,7 @@ int main()
         "./image/oh_75Calib/-5kV_plif_2_oh.tif",
         "./image/oh_chem/-5kV_chem_2_oh.tif",
         "./scale_oh.json",
-        "./image/ch2o_90Calib/-5kV_plif_2_ch2o.tif",
+        "./image/ch2o_75Calib/-5kV_plif_2_ch2o.tif",
         "./image/ch2o_chem/-5kV_chem_2_ch2o.tif",
         "./scale_ch2o.json",
         "HRR_-5kV_2.tif"
@@ -132,7 +132,7 @@ int main()
         "./image/oh_75Calib/7_5kV_plif_1_oh.tif",
         "./image/oh_chem/7_5kV_chem_1_oh.tif",
         "./scale_oh.json",
-        "./image/ch2o_90Calib/7_5kV_plif_1_ch2o.tif",
+        "./image/ch2o_75Calib/7_5kV_plif_1_ch2o.tif",
         "./image/ch2o_chem/7_5kV_chem_1_ch2o.tif",
         "./scale_ch2o.json",
         "HRR_7_5kV_1.tif"
@@ -143,7 +143,7 @@ int main()
         "./image/oh_75Calib/7_5kV_plif_2_oh.tif",
         "./image/oh_chem/7_5kV_chem_2_oh.tif",
         "./scale_oh.json",
-        "./image/ch2o_90Calib/7_5kV_plif_2_ch2o.tif",
+        "./image/ch2o_75Calib/7_5kV_plif_2_ch2o.tif",
         "./image/ch2o_chem/7_5kV_chem_2_ch2o.tif",
         "./scale_ch2o.json",
         "HRR_7_5kV_2.tif"
@@ -154,7 +154,7 @@ int main()
         "./image/oh_75Calib/-7_5kV_plif_1_oh.tif",
         "./image/oh_chem/-7_5kV_chem_1_oh.tif",
         "./scale_oh.json",
-        "./image/ch2o_90Calib/-7_5kV_plif_1_ch2o.tif",
+        "./image/ch2o_75Calib/-7_5kV_plif_1_ch2o.tif",
         "./image/ch2o_chem/-7_5kV_chem_1_ch2o.tif",
         "./scale_ch2o.json",
         "HRR_-7_5kV_1.tif"
@@ -165,7 +165,7 @@ int main()
         "./image/oh_75Calib/-7_5kV_plif_2_oh.tif",
         "./image/oh_chem/-7_5kV_chem_2_oh.tif",
         "./scale_oh.json",
-        "./image/ch2o_90Calib/-7_5kV_plif_2_ch2o.tif",
+        "./image/ch2o_75Calib/-7_5kV_plif_2_ch2o.tif",
         "./image/ch2o_chem/-7_5kV_chem_2_ch2o.tif",
         "./scale_ch2o.json",
         "HRR_-7_5kV_2.tif"
