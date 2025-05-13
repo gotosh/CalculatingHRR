@@ -12,7 +12,6 @@ ImageProcess::ImageProcess(std::string fileName_plif, std::string fileName_chemi
 
 }
 
-/* Get flame position function. Flame position is defined that the position where maximum intensity of chemiluminescence */
 int ImageProcess::get_flame_position() {
     int flameposition;
     
@@ -64,7 +63,7 @@ void ImageProcess::cut_threshold_value(double thresholdconst) {
     threshold(img_plif, img_plif, thresholdVal, maxVal, 3);
 }
 
-void ImageProcess::pixel_to_coordinate(int flame_position) {
+double ImageProcess::pixel_to_coordinate(int flame_position) {
     // Recast region is 20 mm * 10 mm
 }
 
