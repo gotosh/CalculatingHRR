@@ -12,9 +12,7 @@ ImageProcess::ImageProcess(std::string fileName_plif, std::string fileName_chemi
 
 }
 
-int ImageProcess::get_flame_position() {
-    int flameposition;
-    
+int ImageProcess::get_flame_position() { 
     /* Summing up for the direction of row */
     Mat rowSum;
     reduce(aroundcenter_img_chemilumi, rowSum, 1, REDUCE_SUM, CV_32F);
@@ -22,9 +20,32 @@ int ImageProcess::get_flame_position() {
     double maxVal;
     Point maxLoc; // position of max value
     minMaxLoc(rowSum, nullptr, &maxVal, nullptr, &maxLoc);
-    flameposition = maxLoc.y;
+    flame_position = maxLoc.y;
 
-    return flameposition;
+    return flame_position;
+}
+
+double ImageProcess::get_flame_position(bool is_mm) {
+    if (is_mm)
+    {
+        flame_position = get_flame_position();
+        double flame_position_mm = geometry.scale_calibration
+                                   * (geometry.burner_inlet_y - flame_position);
+        return flame_position_mm;
+        
+    } 
+    else
+    {
+        return 0.0;
+    }
+    
+}
+
+int ImageProcess::set_flame_position_fromOH(double flame_position_mm) {
+    flame_position 
+    = static_cast<int>(geometry.burner_inlet_y - 
+                       flame_position_mm / geometry.scale_calibration);
+    return flame_position;
 }
 
 void ImageProcess::normalized_intensity(){
@@ -74,4 +95,8 @@ void ImageProcess::SaveImgplif(std::string file_path) {
 
 ImageProcess::~ImageProcess()
 {
+    if (flame_position < 0)
+    {
+        std::cerr << "Flame position must be positive!" << std::endl;
+    }
 }

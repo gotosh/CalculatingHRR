@@ -7,6 +7,9 @@
 #include <sstream>
 #include "Geometry.hpp"
 
+/**
+ * @brief For parsing JSON file that contains geometry information.
+ */
 class ParseJSON
 {
 private:

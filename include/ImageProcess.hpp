@@ -15,10 +15,16 @@ private:
     /* data */
     Mat img_plif;
     Mat img_chemilumi;
+
+    // Geometry of the picture that is from scale picture
     Geometry& geometry;
+    // Analytical region of this analysis. It is 1 mm width.
     int centerwidth_pixel;
+
     Mat aroundcenter_img_chemilumi;
     Mat aroundcenter_img_plif;
+
+    int flame_position = -1;
 
 
 public:
@@ -36,8 +42,10 @@ public:
 
     /**
      * @brief Get the flame position from OH chemiluminescence image.
-     * This function aim to get the flame position from OH chemiluminescence image.
-     * The flame position is defined that the position where maximum intensity of chemiluminescence.
+     * This function aim to get the flame position 
+     * from OH chemiluminescence image.
+     * The flame position is defined that the position where
+     * maximum intensity of chemiluminescence.
      * @return flame position [pixel]
      */
     int get_flame_position();
@@ -47,12 +55,22 @@ public:
      * and return the flame position from burner exit [mm].
      * @return flame position [mm]
      */
-    double get_flame_position(std::string fileName_OH);
+    double get_flame_position(bool is_mm);
+
+    /**
+     * @brief Receive the flame position in mm unit and 
+     * convert to pixel unit.
+     */
+    int set_flame_position_fromOH(double flame_position_mm);
+    
+
+
 
     /**
      * @brief Normalize intensity of PLIF image.
      * This function aim to normalize intensity of PLIF image.
-     * The normalization is done by subtracting the offset value and dividing by the maximum value.
+     * The normalization is done by subtracting the offset value and
+     * dividing by the maximum value.
      */
     void normalized_intensity();
 
