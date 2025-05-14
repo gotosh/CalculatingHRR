@@ -53,6 +53,7 @@ public:
     /**
      * @brief Get the flame position from OH chemiluminescence image.
      * and return the flame position from burner exit [mm].
+     * @param is_mm if true, return the flame position in mm unit.
      * @return flame position [mm]
      */
     double get_flame_position(bool is_mm);
