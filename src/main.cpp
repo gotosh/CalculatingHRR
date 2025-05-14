@@ -27,7 +27,7 @@ void run_all_task(
     ParseJSON scale_OH(scale_path_OH);
     scale_OH.set_geometry(geometry_OH);
     ImageProcess imageprocess_OH(image_path_OH_PLIF, image_path_OH_chemilumi, geometry_OH);
-    int flame_position_OH = imageprocess_OH.get_flame_position();
+    int flame_position_OH = imageprocess_OH.get_flame_position() - static_cast<int>(1.7 / geometry_OH.scale_calibration);
     std::cout << "OH_path: " << image_path_OH_PLIF << std::endl;
     std::cout << "OH flame position [pixel]: " << flame_position_OH << std::endl;
     double flame_position_mm_OH = geometry_OH.scale_calibration * (geometry_OH.burner_inlet_y - flame_position_OH);
@@ -43,8 +43,7 @@ void run_all_task(
     int flame_position_CH2O = imageprocess_CH2O.set_flame_position_fromOH(flame_position_CH2O_mm);
     std::cout << "CH2O_path: " << image_path_CH2O_PLIF << std::endl;
     std::cout << "flame position [pixel]: " << flame_position_CH2O << std::endl;
-    double flame_position_mm_CH2O = geometry_CH2O.scale_calibration * (geometry_CH2O.burner_inlet_y - flame_position_CH2O );
-    std::cout << "flame position [mm]: " << flame_position_mm_CH2O << std::endl;
+    std::cout << "flame position [mm]: " << flame_position_CH2O_mm << std::endl;
     imageprocess_CH2O.normalized_intensity();
     // imageprocess_CH2O.cut_threshold_value(0.20);
     imageprocess_CH2O.SaveImgplif("test.tif");
@@ -67,110 +66,110 @@ int main()
         "./image/oh_75Calib/0kV_plif_1_oh.tif",
         "./image/oh_chem/0kV_chem_1_oh.tif",
         "./scale_oh.json",
-        "./image/ch2o_plif/AVG_0kV_plif_2.tif",
-        "./image/ch2o_chem/0kV_chem_8bit.tif",
+        "./image/ch2o_plif/AVG_0kv_plif_1.tif",
+        "./image/ch2o_chem/AVG_0kV_chem.tif",
         "./scale_ch2o.json",
         "HRR_0kV_1.tif"
     );
 
-    // /* 0kV HRR 2*/
-    // run_all_task(
-    //     "./image/oh_75Calib/0kV_plif_2_oh.tif",
-    //     "./image/oh_chem/0kV_chem_2_oh.tif",
-    //     "./scale_oh.json",
-    //     "./image/ch2o_75Calib/0kV_plif_3_ch2o.tif",
-    //     "./image/ch2o_chem/0kV_chem_2_ch2o.tif",
-    //     "./scale_ch2o.json",
-    //     "HRR_0kV_2.tif"
-    // );
+    /* 0kV HRR 2*/
+    run_all_task(
+        "./image/oh_75Calib/0kV_plif_2_oh.tif",
+        "./image/oh_chem/0kV_chem_2_oh.tif",
+        "./scale_oh.json",
+        "./image/ch2o_plif/AVG_0kv_plif_2.tif",
+        "./image/ch2o_chem/AVG_0kV_chem.tif",
+        "./scale_ch2o.json",
+        "HRR_0kV_2.tif"
+    );
 
-    // /* +5kV HRR 1*/
-    // run_all_task(
-    //     "./image/oh_75Calib/5kV_plif_1_oh.tif",
-    //     "./image/oh_chem/5kV_chem_1_oh.tif",
-    //     "./scale_oh.json",
-    //     "./image/ch2o_75Calib/5kV_plif_1_ch2o.tif",
-    //     "./image/ch2o_chem/5kV_chem_1_ch2o.tif",
-    //     "./scale_ch2o.json",
-    //     "HRR_5kV_1.tif"
-    // );
+    /* +5kV HRR 1*/
+    run_all_task(
+        "./image/oh_75Calib/5kV_plif_1_oh.tif",
+        "./image/oh_chem/5kV_chem_1_oh.tif",
+        "./scale_oh.json",
+        "./image/ch2o_plif/AVG_5kv_plif_1.tif",
+        "./image/ch2o_chem/AVG_5kV_chem.tif",
+        "./scale_ch2o.json",
+        "HRR_5kV_1.tif"
+    );
 
-    // /* +5kV HRR 2*/
-    // run_all_task(
-    //     "./image/oh_75Calib/5kV_plif_2_oh.tif",
-    //     "./image/oh_chem/5kV_chem_2_oh.tif",
-    //     "./scale_oh.json",
-    //     "./image/ch2o_75Calib/5kV_plif_2_ch2o.tif",
-    //     "./image/ch2o_chem/5kV_chem_2_ch2o.tif",
-    //     "./scale_ch2o.json",
-    //     "HRR_5kV_2.tif"
-    // );
+    /* +5kV HRR 2*/
+    run_all_task(
+        "./image/oh_75Calib/5kV_plif_2_oh.tif",
+        "./image/oh_chem/5kV_chem_2_oh.tif",
+        "./scale_oh.json",
+        "./image/ch2o_plif/AVG_5kv_plif_2.tif",
+        "./image/ch2o_chem/AVG_5kV_chem.tif",
+        "./scale_ch2o.json",
+        "HRR_5kV_2.tif"
+    );
 
     /* -5kV HRR 1*/ 
-    // run_all_task(
-    //     "./image/oh_75Calib/-5kV_plif_1_oh.tif",
-    //     "./image/oh_chem/-5kV_chem_1_oh.tif",
-    //     "./scale_oh.json",
-    //     "./image/ch2o_75Calib/-5kV_plif_1_ch2o.tif",
-    //     "./image/ch2o_chem/-5kV_chem_1_ch2o.tif",
-    //     "./scale_ch2o.json",
-    //     "HRR_-5kV_1.tif"
-    // );
+    run_all_task(
+        "./image/oh_75Calib/-5kV_plif_1_oh.tif",
+        "./image/oh_chem/-5kV_chem_1_oh.tif",
+        "./scale_oh.json",
+        "./image/ch2o_plif/AVG_-5kv_plif_1.tif",
+        "./image/ch2o_chem/AVG_-5kV_chem.tif",
+        "./scale_ch2o.json",
+        "HRR_-5kV_1.tif"
+    );
 
     // /* -5kV HRR 2*/ 
-    // run_all_task(
-    //     "./image/oh_75Calib/-5kV_plif_2_oh.tif",
-    //     "./image/oh_chem/-5kV_chem_2_oh.tif",
-    //     "./scale_oh.json",
-    //     "./image/ch2o_75Calib/-5kV_plif_2_ch2o.tif",
-    //     "./image/ch2o_chem/-5kV_chem_2_ch2o.tif",
-    //     "./scale_ch2o.json",
-    //     "HRR_-5kV_2.tif"
-    // );
+    run_all_task(
+        "./image/oh_75Calib/-5kV_plif_2_oh.tif",
+        "./image/oh_chem/-5kV_chem_2_oh.tif",
+        "./scale_oh.json",
+        "./image/ch2o_plif/AVG_-5kv_plif_2.tif",
+        "./image/ch2o_chem/AVG_-5kV_chem.tif",
+        "./scale_ch2o.json",
+        "HRR_-5kV_2.tif"
+    );
 
     /* +7.5 kV HRR 1*/
     run_all_task(
         "./image/oh_75Calib/7_5kV_plif_1_oh.tif",
         "./image/oh_chem/7_5kV_chem_1_oh.tif",
         "./scale_oh.json",
-        "./image/ch2o_plif/AVG_7_5kV_plif.tif",
-        "./image/ch2o_chem/AVG_7_5kV_chem_8bit.tif",
+        "./image/ch2o_plif/AVG_7_5kv_plif_1.tif",
+        "./image/ch2o_chem/AVG_7_5kV_chem.tif",
         "./scale_ch2o.json",
         "HRR_7_5kV_1.tif"
     );
 
     // /* +7.5 kV HRR 2*/
-    // run_all_task(
-    //     "./image/oh_75Calib/7_5kV_plif_2_oh.tif",
-    //     "./image/oh_chem/7_5kV_chem_2_oh.tif",
-    //     "./scale_oh.json",
-    //     "./image/ch2o_75Calib/7_5kV_plif_2_ch2o.tif",
-    //     "./image/ch2o_chem/7_5kV_chem_2_ch2o.tif",
-    //     "./scale_ch2o.json",
-    //     "HRR_7_5kV_2.tif"
-    // );
+    run_all_task(
+        "./image/oh_75Calib/7_5kV_plif_2_oh.tif",
+        "./image/oh_chem/7_5kV_chem_2_oh.tif",
+        "./scale_oh.json",
+        "./image/ch2o_plif/AVG_7_5kv_plif_2.tif",
+        "./image/ch2o_chem/AVG_7_5kV_chem.tif",
+        "./scale_ch2o.json",
+        "HRR_7_5kV_2.tif"
+    );
 
     /* -7_5kV HRR 1*/
     run_all_task(
         "./image/oh_75Calib/-7_5kV_plif_1_oh.tif",
         "./image/oh_chem/-7_5kV_chem_1_oh.tif",
         "./scale_oh.json",
-        "./image/ch2o_plif/AVG_-7_5kV_plif.tif",
-        "./image/ch2o_chem/AVG_-7_5kV_chem_8bit.tif",
+        "./image/ch2o_plif/AVG_-7_5kv_plif_1.tif",
+        "./image/ch2o_chem/AVG_-7_5kV_chem.tif",
         "./scale_ch2o.json",
         "HRR_-7_5kV_1.tif"
     );
 
     // /* -7_5kV HRR 2*/
-    // run_all_task(
-    //     "./image/oh_75Calib/-7_5kV_plif_2_oh.tif",
-    //     "./image/oh_chem/-7_5kV_chem_2_oh.tif",
-    //     "./scale_oh.json",
-    //     "./image/ch2o_75Calib/-7_5kV_plif_2_ch2o.tif",
-    //     "./image/ch2o_chem/-7_5kV_chem_2_ch2o.tif",
-    //     "./scale_ch2o.json",
-    //     "HRR_-7_5kV_2.tif"
-    // );
+    run_all_task(
+        "./image/oh_75Calib/-7_5kV_plif_2_oh.tif",
+        "./image/oh_chem/-7_5kV_chem_2_oh.tif",
+        "./scale_oh.json",
+        "./image/ch2o_plif/AVG_-7_5kv_plif_2.tif",
+        "./image/ch2o_chem/AVG_-7_5kV_chem.tif",
+        "./scale_ch2o.json",
+        "HRR_-7_5kV_2.tif"
+    );
 
     // Geometry geometry;
     // ParseJSON s("./scale_oh.json");
