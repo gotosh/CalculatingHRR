@@ -13,6 +13,20 @@ ImageProcess::ImageProcess(const std::string fileName_plif,
 
 }
 
+ImageProcess::ImageProcess(const std::string fileName_plif,
+    const std::string fileName_chemilumi,
+    Geometry& geometry, std::unique_ptr<Geometry> geometry_chemilumi)
+    : geometry(geometry), geometry_chemilumi(std::move(geometry_chemilumi))
+{
+    img_plif = imread(fileName_plif, IMREAD_UNCHANGED);
+    img_chemilumi = imread(fileName_chemilumi, IMREAD_UNCHANGED);
+
+    centerwidth_pixel = static_cast<int>(0.5 / geometry.scale_calibration);
+    /* 1 mm width center subtraction. To find flame position, considering strip shape square */
+    aroundcenter_img_chemilumi = img_chemilumi.colRange(geometry.burner_center_x - centerwidth_pixel, geometry.burner_center_x + centerwidth_pixel).clone();
+    aroundcenter_img_plif = img_plif.colRange(geometry.burner_center_x - centerwidth_pixel, geometry.burner_center_x + centerwidth_pixel).clone();
+}
+
 int ImageProcess::get_flame_position() { 
     /* Summing up for the direction of row */
     Mat rowSum;
@@ -40,6 +54,21 @@ double ImageProcess::get_flame_position(bool is_mm) {
         return 0.0;
     }
     
+}
+
+double ImageProcess::get_flame_position_otherref(bool is_mm) {
+    if (is_mm)
+    {
+        flame_position = get_flame_position();
+        double flame_position_mm = geometry_chemilumi->scale_calibration
+                                   * (geometry_chemilumi->burner_inlet_y - flame_position);
+        return flame_position_mm;
+        
+    } 
+    else
+    {
+        return 0.0;
+    }
 }
 
 int ImageProcess::set_flame_position_fromOH(double flame_position_mm) {

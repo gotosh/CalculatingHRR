@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include <memory>
 #include "opencv2/opencv.hpp"
 #include "Geometry.hpp"
 
@@ -19,6 +20,7 @@ private:
 
     // Geometry of the picture that is from scale picture
     Geometry& geometry;
+    std::unique_ptr<Geometry> geometry_chemilumi = nullptr;
     // Analytical region of this analysis. It is 1 mm width.
     int centerwidth_pixel;
 
@@ -40,6 +42,21 @@ public:
      * @note This constructor crops the image around the burner center.
      */
     ImageProcess(std::string fileName_plif, std::string fileName_chemilumi, Geometry& geometry);
+    
+    /**
+     * @brief Construct a new Image Process object
+     * 
+     * @param fileName_plif PLIF image file name
+     * @param fileName_chemilumi Chemiluminescence image file name
+     * @param geometry Geometry object
+     * @param geometry_chemilumi Geometry object for chemiluminescence image
+     * 
+     * @note This constructor crops the image around the burner center.
+     * Use this constructor when the geometry of the chemiluminescence image has different 
+     * geometry from the PLIF image.
+     */
+    ImageProcess(std::string fileName_plif, std::string fileName_chemilumi, 
+        Geometry& geometry, std::unique_ptr<Geometry> geometry_chemilumi);
 
 
     /**
@@ -59,6 +76,14 @@ public:
      * @return flame position [mm]
      */
     double get_flame_position(bool is_mm);
+
+    /**
+     * @brief Get the flame position from OH chemiluminescence image.
+     * and return the flame position from burner exit [mm].
+     * @param is_mm if true, return the flame position in mm unit.
+     * @return flame position [mm]
+     */
+    double get_flame_position_otherref(bool is_mm);
 
     /**
      * @brief Receive the flame position in mm unit and 
