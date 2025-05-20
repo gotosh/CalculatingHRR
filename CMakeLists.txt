@@ -28,4 +28,8 @@ add_executable(main
 target_link_libraries(main
     ${OpenCV_LIBRARIES}
 )
+# デバッグ用のフラグ（コンパイル時に -g を確実に追加）
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0") 
+
+# src/ ディレクトリにCMakeLists.txtがあれば追加
 add_subdirectory(src)

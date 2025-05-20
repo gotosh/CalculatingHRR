@@ -1,6 +1,7 @@
 #include "ImageProcess.hpp"
 
-ImageProcess::ImageProcess(std::string fileName_plif, std::string fileName_chemilumi, Geometry& geometry) : geometry(geometry)
+ImageProcess::ImageProcess(const std::string fileName_plif,
+    const std::string fileName_chemilumi, Geometry& geometry) : geometry(geometry)
 {
     img_plif = imread(fileName_plif, IMREAD_UNCHANGED);
     img_chemilumi = imread(fileName_chemilumi, IMREAD_UNCHANGED);
@@ -48,7 +49,7 @@ int ImageProcess::set_flame_position_fromOH(double flame_position_mm) {
     return flame_position;
 }
 
-void ImageProcess::normalized_intensity(){
+void ImageProcess::normalized_intensity(int normalizeValue){
     // Subtract offset value
     Mat rowMean;
     double minVal, maxVal;
@@ -57,19 +58,33 @@ void ImageProcess::normalized_intensity(){
     
     reduce(aroundcenter_img_plif, rowMean, 1, REDUCE_AVG, CV_32F); // Average row direction
     minMaxLoc(rowMean, &minVal, &maxVal, &minLoc, &maxLoc);
+    maxVal_onCenter = maxVal;
     img_plif.convertTo(img_plif, CV_32F);
     img_plif = img_plif - static_cast<float>(minVal);
     // Normalize
-    float normalizeValue = img_plif.at<float>(maxLoc.y, geometry.burner_center_x);
-    if (normalizeValue != 0)
-    {
-        img_plif = img_plif / normalizeValue;    
+    if (normalizeValue == 0) {
+        maxVal = static_cast<float>(maxVal);
+        img_plif = img_plif / maxVal;
+    }
+    else if (normalizeValue == 1) {
+        normalizeValue = static_cast<float>(normalizeValue);
+        img_plif = img_plif / normalizeValue;
     } else {
-        std::cerr << "Warning: normalizeValue is zero, skkipping normalization." << std::endl;
+        normalizeValue = static_cast<float>(normalizeValue);
+        img_plif = img_plif / normalizeValue;
     }
 
     // std::cout << img_plif.col(geometry.burner_center_x) << std::endl;
     
+}
+
+float ImageProcess::get_maxVal_onCenter() {
+    if (maxVal_onCenter < 0)
+    {
+        std::cerr << "Max value is not calculated!" << std::endl;
+        return -1.0;
+    }
+    return maxVal_onCenter;
 }
 
 Mat& ImageProcess::getImage_plif() {
@@ -86,6 +101,7 @@ void ImageProcess::cut_threshold_value(double thresholdconst) {
 
 double ImageProcess::pixel_to_coordinate(int flame_position) {
     // Recast region is 20 mm * 10 mm
+    return static_cast<double>(flame_position) * geometry.scale_calibration;
 }
 
 void ImageProcess::SaveImgplif(std::string file_path) {

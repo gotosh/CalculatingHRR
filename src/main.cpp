@@ -2,6 +2,7 @@
 #include <string>
 #include <typeinfo>
 #include <fstream>
+#include <utility>
 
 #include "opencv2/opencv.hpp"
 
@@ -12,14 +13,16 @@
 
 using namespace cv;
 
-void run_all_task(
+std::pair<float, float> run_all_task(
     std::string image_path_OH_PLIF,
     std::string image_path_OH_chemilumi,
     std::string scale_path_OH,
     std::string image_path_CH2O_PLIF,
     std::string image_path_CH2O_chemilumi,
     std::string scale_path_CH2O,
-    std::string output_img_path
+    std::string output_img_path,
+    int normalizeValue_OH = 0,
+    int normalizeValue_CH2O = 0
 ) {
     Geometry geometry_OH;
     Geometry geometry_CH2O;
@@ -27,12 +30,13 @@ void run_all_task(
     ParseJSON scale_OH(scale_path_OH);
     scale_OH.set_geometry(geometry_OH);
     ImageProcess imageprocess_OH(image_path_OH_PLIF, image_path_OH_chemilumi, geometry_OH);
-    int flame_position_OH = imageprocess_OH.get_flame_position() - static_cast<int>(1.7 / geometry_OH.scale_calibration);
+    int flame_position_OH = imageprocess_OH.get_flame_position() - static_cast<int>(1.5 / geometry_OH.scale_calibration);
     std::cout << "OH_path: " << image_path_OH_PLIF << std::endl;
     std::cout << "OH flame position [pixel]: " << flame_position_OH << std::endl;
     double flame_position_mm_OH = geometry_OH.scale_calibration * (geometry_OH.burner_inlet_y - flame_position_OH);
     std::cout << "OH flame position [mm]: " << flame_position_mm_OH << std::endl;
-    imageprocess_OH.normalized_intensity();
+    imageprocess_OH.normalized_intensity(normalizeValue_OH);
+    float OH_maxVal = imageprocess_OH.get_maxVal_onCenter();
     imageprocess_OH.cut_threshold_value(0.1);
     Mat& OH_plif_ref = imageprocess_OH.getImage_plif();
 
@@ -44,7 +48,8 @@ void run_all_task(
     std::cout << "CH2O_path: " << image_path_CH2O_PLIF << std::endl;
     std::cout << "flame position [pixel]: " << flame_position_CH2O << std::endl;
     std::cout << "flame position [mm]: " << flame_position_CH2O_mm << std::endl;
-    imageprocess_CH2O.normalized_intensity();
+    imageprocess_CH2O.normalized_intensity(normalizeValue_CH2O);
+    float CH2O_maxVal = imageprocess_CH2O.get_maxVal_onCenter();
     // imageprocess_CH2O.cut_threshold_value(0.20);
     imageprocess_CH2O.SaveImgplif("test.tif");
     Mat& CH2O_plif_ref = imageprocess_CH2O.getImage_plif();
@@ -55,14 +60,14 @@ void run_all_task(
     calculate_CH2O.convert_geometry(flame_position_CH2O, 10, 5);
     calculate_CH2O.Product_HRR(calculate_OH, output_img_path);
 
-    return;
+    return std::make_pair(OH_maxVal, CH2O_maxVal);
 }
 
 
 int main()
 {
     /* 0kV HRR 1*/
-    run_all_task(
+    auto [OH_max_1, CH2O_max_1] = run_all_task(
         "./image/oh_75Calib/0kV_plif_1_oh.tif",
         "./image/oh_chem/0kV_chem_1_oh.tif",
         "./scale_oh.json",
@@ -73,7 +78,7 @@ int main()
     );
 
     /* 0kV HRR 2*/
-    run_all_task(
+    auto [OH_max_2, CH2O_max_2] = run_all_task(
         "./image/oh_75Calib/0kV_plif_2_oh.tif",
         "./image/oh_chem/0kV_chem_2_oh.tif",
         "./scale_oh.json",
@@ -91,7 +96,9 @@ int main()
         "./image/ch2o_plif/AVG_5kv_plif_1.tif",
         "./image/ch2o_chem/AVG_5kV_chem.tif",
         "./scale_ch2o.json",
-        "HRR_5kV_1.tif"
+        "HRR_5kV_1.tif",
+        OH_max_1,
+        CH2O_max_1
     );
 
     /* +5kV HRR 2*/
@@ -102,7 +109,9 @@ int main()
         "./image/ch2o_plif/AVG_5kv_plif_2.tif",
         "./image/ch2o_chem/AVG_5kV_chem.tif",
         "./scale_ch2o.json",
-        "HRR_5kV_2.tif"
+        "HRR_5kV_2.tif",
+        OH_max_2,
+        CH2O_max_2
     );
 
     /* -5kV HRR 1*/ 
@@ -113,7 +122,9 @@ int main()
         "./image/ch2o_plif/AVG_-5kv_plif_1.tif",
         "./image/ch2o_chem/AVG_-5kV_chem.tif",
         "./scale_ch2o.json",
-        "HRR_-5kV_1.tif"
+        "HRR_-5kV_1.tif",
+        OH_max_1,
+        CH2O_max_1
     );
 
     // /* -5kV HRR 2*/ 
@@ -124,7 +135,9 @@ int main()
         "./image/ch2o_plif/AVG_-5kv_plif_2.tif",
         "./image/ch2o_chem/AVG_-5kV_chem.tif",
         "./scale_ch2o.json",
-        "HRR_-5kV_2.tif"
+        "HRR_-5kV_2.tif",
+        OH_max_2,
+        CH2O_max_2
     );
 
     /* +7.5 kV HRR 1*/
@@ -135,7 +148,9 @@ int main()
         "./image/ch2o_plif/AVG_7_5kv_plif_1.tif",
         "./image/ch2o_chem/AVG_7_5kV_chem.tif",
         "./scale_ch2o.json",
-        "HRR_7_5kV_1.tif"
+        "HRR_7_5kV_1.tif",
+        OH_max_1,
+        CH2O_max_1
     );
 
     // /* +7.5 kV HRR 2*/
@@ -146,7 +161,9 @@ int main()
         "./image/ch2o_plif/AVG_7_5kv_plif_2.tif",
         "./image/ch2o_chem/AVG_7_5kV_chem.tif",
         "./scale_ch2o.json",
-        "HRR_7_5kV_2.tif"
+        "HRR_7_5kV_2.tif",
+        OH_max_2,
+        CH2O_max_2
     );
 
     /* -7_5kV HRR 1*/
@@ -157,7 +174,9 @@ int main()
         "./image/ch2o_plif/AVG_-7_5kv_plif_1.tif",
         "./image/ch2o_chem/AVG_-7_5kV_chem.tif",
         "./scale_ch2o.json",
-        "HRR_-7_5kV_1.tif"
+        "HRR_-7_5kV_1.tif",
+        OH_max_1,
+        CH2O_max_1
     );
 
     // /* -7_5kV HRR 2*/
@@ -168,7 +187,9 @@ int main()
         "./image/ch2o_plif/AVG_-7_5kv_plif_2.tif",
         "./image/ch2o_chem/AVG_-7_5kV_chem.tif",
         "./scale_ch2o.json",
-        "HRR_-7_5kV_2.tif"
+        "HRR_-7_5kV_2.tif",
+        OH_max_2,
+        CH2O_max_2
     );
 
     // Geometry geometry;

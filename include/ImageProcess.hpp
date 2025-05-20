@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <cassert>
 #include "opencv2/opencv.hpp"
 #include "Geometry.hpp"
 
@@ -25,6 +26,7 @@ private:
     Mat aroundcenter_img_plif;
 
     int flame_position = -1;
+    float maxVal_onCenter = -1.0;
 
 
 public:
@@ -69,11 +71,25 @@ public:
 
     /**
      * @brief Normalize intensity of PLIF image.
+     * @param normalizeValue normalization value 
+     * if normalizeValue = 1, the image is normalized by 1
+     * if normalizeValue = 0, the image is normalized by maximum value
+     * of the image.
+     * if normalizeValue is given, the image is normalized by given value,
+     * which is reference other condition image.
+     * 
      * This function aim to normalize intensity of PLIF image.
      * The normalization is done by subtracting the offset value and
      * dividing by the maximum value.
      */
-    void normalized_intensity();
+    void normalized_intensity(int normalizeValue = 1);
+
+    /**
+     * @brief Get the maximum value on center of the image.
+     * This function aim to get the maximum value on center of the image.
+     * @return maximum value on center of the image
+     */
+    float get_maxVal_onCenter();
 
     /**
      * @brief Convert pixel to coordinate.
