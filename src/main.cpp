@@ -32,14 +32,14 @@ std::pair<float, float> run_all_task(
     ParseJSON scale_OH(scale_path_OH);
     scale_OH.set_geometry(geometry_OH);
     ImageProcess imageprocess_OH(image_path_OH_PLIF, image_path_OH_chemilumi, geometry_OH);
-    int flame_position_OH = imageprocess_OH.get_flame_position() - static_cast<int>(1.0 / geometry_OH.scale_calibration);
+    int flame_position_OH = imageprocess_OH.get_flame_position(); //- static_cast<int>(1.0 / geometry_OH.scale_calibration);
     std::cout << "OH_path: " << image_path_OH_PLIF << std::endl;
     std::cout << "OH flame position [pixel]: " << flame_position_OH << std::endl;
     double flame_position_mm_OH = geometry_OH.scale_calibration * (geometry_OH.burner_inlet_y - flame_position_OH);
     std::cout << "OH flame position [mm]: " << flame_position_mm_OH << std::endl;
     imageprocess_OH.normalized_intensity(normalizeValue_OH);
     float OH_maxVal = imageprocess_OH.get_maxVal_onCenter();
-    imageprocess_OH.cut_threshold_value(0.1);
+    // imageprocess_OH.cut_threshold_value(0.1);
     Mat& OH_plif_ref = imageprocess_OH.getImage_plif();
 
     ParseJSON scale_CH2O(scale_path_CH2O);
