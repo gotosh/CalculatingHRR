@@ -14,6 +14,9 @@ void CalculateHRR::convert_geometry(const int flame_position, const int horizont
         Range(flame_position - vertical_pixel_num, flame_position + vertical_pixel_num),
         Range(geometry.burner_center_x - horizontal_pixel_num, geometry.burner_center_x + horizontal_pixel_num)
     );
+    _center_aft_crop = horizontal_pixel_num;
+    _flame_posi_aft_crop = vertical_pixel_num;
+
     return;
 }
 
@@ -42,9 +45,15 @@ void CalculateHRR::Product_HRR(CalculateHRR& other_class, std::string saved_path
 
     Mat product;
     multiply(img_plif, other_class.img_plif, product);
+    result_HRR = product.clone();
     cv::normalize(product, product, 0, 65535, cv::NORM_MINMAX, CV_16U);
     imwrite(saved_path, product);
         
+}
+
+float CalculateHRR::getMaximum_HRR() {
+    float max_value = result_HRR.at<float>(_flame_posi_aft_crop, _center_aft_crop);
+    return max_value;
 }
 
 CalculateHRR::~CalculateHRR()
