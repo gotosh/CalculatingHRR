@@ -106,6 +106,34 @@ int main()
         "HRR_0kV_2.tif"
     );
 
+    /* 2.5 kV HRR 1*/
+    run_all_task(
+        "image/oh_75Calib/2_5kV_plif_1_oh.tif",
+        "image/oh_chem/2_5kV_chem_1_oh.tif",
+        "./scale_oh.json",
+        "image/ch2o_plif/AVG_2_5kV_plif_1.tif",
+        "image/ch2o_chem/AVG_2_5kV_chem.tif",
+        "./scale_ch2o.json",
+        "./scale_ch2o_oh.json",
+        "HRR_2_5kV_1.tif",
+        OH_max_1,
+        CH2O_max_1
+    );
+
+    /* -2.5 kV HRR 1*/
+    run_all_task(
+        "image/oh_75Calib/-2_5kV_plif_1_oh.tif",
+        "image/oh_chem/-2_5kV_chem_1_oh.tif",
+        "./scale_oh.json",
+        "image/ch2o_plif/AVG_-2_5kV_plif_1.tif",
+        "image/ch2o_chem/AVG_-2_5kV_chem.tif",
+        "./scale_ch2o.json",
+        "./scale_ch2o_oh.json",
+        "HRR_-2_5kV_1.tif",
+        OH_max_1,
+        CH2O_max_1
+    );
+
     /* +5kV HRR 1*/
     run_all_task(
         "./image/oh_75Calib/5kV_plif_1_oh.tif",
