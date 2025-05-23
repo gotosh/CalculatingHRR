@@ -90,9 +90,6 @@ public:
      * convert to pixel unit.
      */
     int set_flame_position_fromOH(double flame_position_mm);
-    
-
-
 
     /**
      * @brief Normalize intensity of PLIF image.
@@ -111,7 +108,8 @@ public:
 
     /**
      * @brief Get the maximum value on center of the image.
-     * This function aim to get the maximum value on center of the image.
+     * This function aim to get the maximum value on center of the image
+     * and to normalize image by using other condition's value
      * @return maximum value on center of the image
      */
     float get_maxVal_onCenter();
