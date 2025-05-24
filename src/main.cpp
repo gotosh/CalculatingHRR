@@ -22,6 +22,7 @@ std::pair<float, float> run_all_task(
     std::string scale_path_CH2O,
     std::string scale_path_CH2O_chemilumi,
     std::string output_img_path,
+    std::string output_center_value_path,
     int normalizeValue_OH = 0,
     int normalizeValue_CH2O = 0
 ) {
@@ -77,13 +78,16 @@ std::pair<float, float> run_all_task(
     calculate_CH2O.convert_geometry(flame_position_CH2O, 10, 5);
     calculate_CH2O.Product_HRR(calculate_OH, output_img_path);
 
-    calculate_CH2O.setScaleCalib_HRR();
     calculate_CH2O.image_crop(0.5);
     calculate_CH2O.reduce_cropped_image();
     float maxValue = calculate_CH2O.getMaximum_HRR();
     std::cout << "max value of HRR: " << maxValue << std::endl;
     float fwhm = calculate_CH2O.get_e2width();
     std::cout << "FWHM width: " << fwhm << std::endl;
+
+    calculate_CH2O.saveCenterdistrib(
+        output_center_value_path
+    );
 
     return std::make_pair(OH_maxVal, CH2O_maxVal);
 }
@@ -100,7 +104,8 @@ int main()
         "./image/ch2o_chem/AVG_0kV_chem.tif",
         "./scale_ch2o.json",
         "./scale_ch2o_oh.json",
-        "HRR_0kV_1.tif"
+        "HRR_0kV_1.tif",
+        "HRR_0kV_center_1.csv"
     );
 
     /* 0kV HRR 2*/
@@ -112,7 +117,8 @@ int main()
         "./image/ch2o_chem/AVG_0kV_chem.tif",
         "./scale_ch2o.json",
         "./scale_ch2o_oh.json",
-        "HRR_0kV_2.tif"
+        "HRR_0kV_2.tif",
+        "HRR_0kV_center_2.csv"
     );
 
     /* 2.5 kV HRR 1*/
@@ -125,6 +131,7 @@ int main()
         "./scale_ch2o.json",
         "./scale_ch2o_oh.json",
         "HRR_2_5kV_1.tif",
+        "HRR_2_5kV_center_1.csv",
         OH_max_1,
         CH2O_max_1
     );
@@ -139,6 +146,7 @@ int main()
         "./scale_ch2o.json",
         "./scale_ch2o_oh.json",
         "HRR_-2_5kV_1.tif",
+        "HRR_-2_5kV_center_1.csv",
         OH_max_1,
         CH2O_max_1
     );
@@ -153,6 +161,7 @@ int main()
         "./scale_ch2o.json",
         "./scale_ch2o_oh.json",
         "HRR_5kV_1.tif",
+        "HRR_5kV_center_1.csv",
         OH_max_1,
         CH2O_max_1
     );
@@ -167,6 +176,7 @@ int main()
         "./scale_ch2o.json",
         "./scale_ch2o_oh.json",
         "HRR_5kV_2.tif",
+        "HRR_5kV_center_2.csv",
         OH_max_2,
         CH2O_max_2
     );
@@ -181,6 +191,7 @@ int main()
         "./scale_ch2o.json",
         "./scale_ch2o_oh.json",
         "HRR_-5kV_1.tif",
+        "HRR_-5kV_center_1.csv",
         OH_max_1,
         CH2O_max_1
     );
@@ -195,6 +206,7 @@ int main()
         "./scale_ch2o.json",
         "./scale_ch2o_oh.json",
         "HRR_-5kV_2.tif",
+        "HRR_-5kV_center_2.csv",
         OH_max_2,
         CH2O_max_2
     );
@@ -209,6 +221,7 @@ int main()
         "./scale_ch2o.json",
         "./scale_ch2o_oh.json",
         "HRR_7_5kV_1.tif",
+        "HRR_7_5kV_center_1.csv",
         OH_max_1,
         CH2O_max_1
     );
@@ -223,6 +236,7 @@ int main()
         "./scale_ch2o.json",
         "./scale_ch2o_oh.json",
         "HRR_7_5kV_2.tif",
+        "HRR_7_5kV_center_2.csv",
         OH_max_2,
         CH2O_max_2
     );
@@ -237,6 +251,7 @@ int main()
         "./scale_ch2o.json",
         "./scale_ch2o_oh.json",
         "HRR_-7_5kV_1.tif",
+        "HRR_-7_5kV_center_1.csv",
         OH_max_1,
         CH2O_max_1
     );
@@ -251,6 +266,7 @@ int main()
         "./scale_ch2o.json",
         "./scale_ch2o_oh.json",
         "HRR_-7_5kV_2.tif",
+        "HRR_-7_5kV_center_2.csv",
         OH_max_2,
         CH2O_max_2
     );

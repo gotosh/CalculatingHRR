@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <fstream>
 #include "opencv2/opencv.hpp"
 #include "Geometry.hpp"
 
@@ -28,6 +29,7 @@ public:
     void image_crop(double half_crop_width_mm);
     void reduce_cropped_image();
     double get_e2width();
+    void saveCenterdistrib(std::string save_fileName);
     ~CalculateHRR();
 
 protected:

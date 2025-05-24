@@ -34,8 +34,10 @@ void CalculateHRR::Product_HRR(CalculateHRR& other_class, std::string saved_path
     if (other_class.geometry.scale_calibration > geometry.scale_calibration)
     {
         resize(other_class.img_plif, other_class.img_plif, img_plif.size(), 0, 0, INTER_CUBIC);
+        scale_calib_HRRim = geometry.scale_calibration;
     } else {
         resize(img_plif, img_plif, other_class.img_plif.size(), 0, 0, INTER_CUBIC);
+        scale_calib_HRRim = other_class.geometry.scale_calibration;
     }
 
     /* Confirm the size of each image */
@@ -45,11 +47,11 @@ void CalculateHRR::Product_HRR(CalculateHRR& other_class, std::string saved_path
         return;
     }
 
-    Mat product;
+    Mat product, output;
     multiply(img_plif, other_class.img_plif, product);
     result_HRR = product.clone();
-    cv::normalize(product, product, 0, 65535, cv::NORM_MINMAX, CV_16U);
-    imwrite(saved_path, product);
+    cv::normalize(product, output, 0, 65535, cv::NORM_MINMAX, CV_16U);
+    imwrite(saved_path, output);
         
 }
 
@@ -104,6 +106,42 @@ double CalculateHRR::get_e2width() {
     float fwhm_mm = length_fwhmpx * 2 * scale_calib_HRRim;
     return static_cast<double>(fwhm_mm);
 
+}
+
+void CalculateHRR::saveCenterdistrib(std::string save_fileName) {
+    if (result_HRR.cols != 1)
+    {
+        std::cerr << "Please use reduce_cropped_image() function first."
+                        "For reducing image to One dimensional" << std::endl;
+    }
+    if (scale_calib_HRRim == 0.0)
+    {
+        std::cerr << "Please use setScaleCalib_HRR function"
+                     " to set mm/px in image"
+                  << std::endl;
+    }
+    
+    std::vector<float> center_axis;
+    for (size_t i = 0; i < result_HRR.rows; i++)
+    {
+        float y = scale_calib_HRRim * i;
+        center_axis.push_back(y);
+    }
+    
+    std::ofstream file(save_fileName);
+    if (!file)
+    {
+        std::cerr << "Error: Unable to open file for writing" << std::endl;
+    }
+    
+    for (size_t i = 0; i < result_HRR.rows; i++)
+    {
+        file << center_axis.at(i) << "," << result_HRR.at<float>(i)
+             << std::endl;
+    }
+    
+    
+    
 }
 
 CalculateHRR::~CalculateHRR()
