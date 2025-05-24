@@ -8,6 +8,8 @@ CalculateHRR::CalculateHRR(Mat& image_plif, Geometry& geometry) : img_plif(image
 
 void CalculateHRR::convert_geometry(const int flame_position, const int horizontal_mm, const int vertical_mm) {
     int horizontal_pixel_num, vertical_pixel_num;
+    _horizontal_mm = horizontal_mm;
+    _vertical_mm = vertical_mm;
     horizontal_pixel_num = static_cast<int>(horizontal_mm / geometry.scale_calibration);
     vertical_pixel_num = static_cast<int>(vertical_mm / geometry.scale_calibration);
     img_plif = img_plif(
@@ -51,9 +53,57 @@ void CalculateHRR::Product_HRR(CalculateHRR& other_class, std::string saved_path
         
 }
 
+void CalculateHRR::setScaleCalib_HRR() {
+        scale_calib_HRRim = (
+        static_cast<double>(_horizontal_mm)
+            / static_cast<double>(_center_aft_crop)
+        + static_cast<double>(_vertical_mm)
+            / static_cast<double>(_flame_posi_aft_crop)
+    ) / 2;
+}
+
+void CalculateHRR::image_crop(double half_crop_width_mm) {
+    int half_crop_width_px 
+        = static_cast<int>(half_crop_width_mm / scale_calib_HRRim);
+    result_HRR = result_HRR.colRange(
+        _center_aft_crop - half_crop_width_px,
+        _center_aft_crop + half_crop_width_px 
+    );
+}
+
+void CalculateHRR::reduce_cropped_image() {
+    reduce(result_HRR, result_HRR, 1, REDUCE_AVG, CV_32F);
+}
+
+
 float CalculateHRR::getMaximum_HRR() {
-    float max_value = result_HRR.at<float>(_flame_posi_aft_crop, _center_aft_crop);
-    return max_value;
+    double maxVal;  // minMaxLoc cannot accept float value
+    Point maxLoc;
+    minMaxLoc(result_HRR, nullptr, &maxVal, nullptr, &maxLoc);
+    maxLoc_HRR = maxLoc;
+    maxVal_HRR = static_cast<float>(maxVal);
+    return maxVal;
+}
+
+
+double CalculateHRR::get_e2width() {
+    int max_index = maxLoc_HRR.y;
+    int length = result_HRR.total();
+    std::vector<int> indices;
+    Mat result_HRR_maxright = result_HRR.rowRange(max_index, length);
+    for (int i = 0; i < length - max_index; i++)
+    {
+        if (result_HRR_maxright.at<float>(i) 
+                > maxVal_HRR / (exp(1.0) * (exp(1.0))))
+        {
+            indices.push_back(i);
+        }
+        
+    }
+    int length_fwhmpx = indices.size();
+    float fwhm_mm = length_fwhmpx * 2 * scale_calib_HRRim;
+    return static_cast<double>(fwhm_mm);
+
 }
 
 CalculateHRR::~CalculateHRR()

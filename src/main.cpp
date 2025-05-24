@@ -25,6 +25,7 @@ std::pair<float, float> run_all_task(
     int normalizeValue_OH = 0,
     int normalizeValue_CH2O = 0
 ) {
+    std::cout << "-------------------------------------------" << std::endl;
     Geometry geometry_OH;
     Geometry geometry_CH2O;
     Geometry geometry_CH2O_chemilumi;
@@ -75,6 +76,14 @@ std::pair<float, float> run_all_task(
     CalculateHRR calculate_CH2O(CH2O_plif_ref, geometry_CH2O);
     calculate_CH2O.convert_geometry(flame_position_CH2O, 10, 5);
     calculate_CH2O.Product_HRR(calculate_OH, output_img_path);
+
+    calculate_CH2O.setScaleCalib_HRR();
+    calculate_CH2O.image_crop(0.5);
+    calculate_CH2O.reduce_cropped_image();
+    float maxValue = calculate_CH2O.getMaximum_HRR();
+    std::cout << "max value of HRR: " << maxValue << std::endl;
+    float fwhm = calculate_CH2O.get_e2width();
+    std::cout << "FWHM width: " << fwhm << std::endl;
 
     return std::make_pair(OH_maxVal, CH2O_maxVal);
 }
