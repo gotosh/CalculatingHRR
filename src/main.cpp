@@ -82,7 +82,9 @@ std::pair<float, float> run_all_task(
     calculate_CH2O.reduce_cropped_image();
     float maxValue = calculate_CH2O.getMaximum_HRR();
     std::cout << "max value of HRR: " << maxValue << std::endl;
-    float fwhm = calculate_CH2O.get_e2width();
+    calculate_CH2O.liner_interp_distribution(100);
+
+    double fwhm = calculate_CH2O.get_e2width(true);
     std::cout << "FWHM width: " << fwhm << std::endl;
 
     calculate_CH2O.saveCenterdistrib(

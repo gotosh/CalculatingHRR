@@ -55,15 +55,6 @@ void CalculateHRR::Product_HRR(CalculateHRR& other_class, std::string saved_path
         
 }
 
-void CalculateHRR::setScaleCalib_HRR() {
-        scale_calib_HRRim = (
-        static_cast<double>(_horizontal_mm)
-            / static_cast<double>(_center_aft_crop)
-        + static_cast<double>(_vertical_mm)
-            / static_cast<double>(_flame_posi_aft_crop)
-    ) / 2;
-}
-
 void CalculateHRR::image_crop(double half_crop_width_mm) {
     int half_crop_width_px 
         = static_cast<int>(half_crop_width_mm / scale_calib_HRRim);
@@ -87,6 +78,39 @@ float CalculateHRR::getMaximum_HRR() {
     return maxVal;
 }
 
+void CalculateHRR::liner_interp_distribution(int mag) {
+    if (typeid(mag).name() != typeid(int).name())
+    {
+        std::cerr << "arg mag must be int value" <<  std::endl;
+    }
+
+    result_1D_vec.assign(
+        (float*)result_HRR.datastart, (float*)result_HRR.dataend);
+
+    double _dx = scale_calib_HRRim / static_cast<float>(mag);
+    int len_distr = result_1D_vec.size();
+    int i = 0;
+    while (i < len_distr - 1)
+    {
+        float dydpx = (result_1D_vec.at(i + 1) - result_1D_vec.at(i))
+                        / (mag);
+        for (int j = 1; j < mag - 1; j++)
+        {
+            float new_point = 
+                result_1D_vec.at(i) + dydpx * j;
+            result_1D_vec.insert(
+                result_1D_vec.begin() + i + j,
+                new_point
+            );
+        }
+        len_distr = result_1D_vec.size(); // update result vector size 
+        i = i + (mag - 1); // update next calculation point
+        
+    }
+    scale_calib_HRRim = _dx;
+    maxLoc_HRR.y = maxLoc_HRR.y * mag;
+}
+
 
 double CalculateHRR::get_e2width() {
     int max_index = maxLoc_HRR.y;
@@ -108,6 +132,26 @@ double CalculateHRR::get_e2width() {
 
 }
 
+double CalculateHRR::get_e2width(bool interpolation) {
+    int max_index = maxLoc_HRR.y;
+    int length = result_1D_vec.size();
+    std::vector<int> indices;
+    
+    for (int i = max_index; i < length; i++)
+    {
+        if (result_1D_vec.at(i)
+                > maxVal_HRR / (exp(1.0) * (exp(1.0))))
+        {
+            indices.push_back(i);
+        }
+        
+    }
+    int length_fwhmpx = indices.size();
+    float fwhm_mm = length_fwhmpx * 2 * scale_calib_HRRim;
+    return static_cast<double>(fwhm_mm);
+    
+}
+
 void CalculateHRR::saveCenterdistrib(std::string save_fileName) {
     if (result_HRR.cols != 1)
     {
@@ -122,7 +166,7 @@ void CalculateHRR::saveCenterdistrib(std::string save_fileName) {
     }
     
     std::vector<float> center_axis;
-    for (size_t i = 0; i < result_HRR.rows; i++)
+    for (size_t i = 0; i < result_1D_vec.size(); i++)
     {
         float y = scale_calib_HRRim * i;
         center_axis.push_back(y);
@@ -134,9 +178,9 @@ void CalculateHRR::saveCenterdistrib(std::string save_fileName) {
         std::cerr << "Error: Unable to open file for writing" << std::endl;
     }
     
-    for (size_t i = 0; i < result_HRR.rows; i++)
+    for (size_t i = 0; i < result_1D_vec.size(); i++)
     {
-        file << center_axis.at(i) << "," << result_HRR.at<float>(i)
+        file << center_axis.at(i) << "," << result_1D_vec.at(i)
              << std::endl;
     }
     
