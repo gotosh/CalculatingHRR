@@ -41,7 +41,8 @@ public:
 
     double get_e2width();
     double get_e2width(bool interpolation);
-    void saveCenterdistrib(std::string save_fileName);
+    void saveCenterdistrib(std::string save_fileName,
+                           double flame_position_mm = 0.0);
     ~CalculateHRR();
 
 protected:

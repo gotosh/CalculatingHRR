@@ -152,7 +152,8 @@ double CalculateHRR::get_e2width(bool interpolation) {
     
 }
 
-void CalculateHRR::saveCenterdistrib(std::string save_fileName) {
+void CalculateHRR::saveCenterdistrib(std::string save_fileName,
+                                     double flame_position_mm) {
     if (result_HRR.cols != 1)
     {
         std::cerr << "Please use reduce_cropped_image() function first."
@@ -166,9 +167,9 @@ void CalculateHRR::saveCenterdistrib(std::string save_fileName) {
     }
     
     std::vector<float> center_axis;
-    for (size_t i = 0; i < result_1D_vec.size(); i++)
+for (size_t i = 0; i < result_HRR.rows; i++)
     {
-        float y = scale_calib_HRRim * i;
+        float y = (flame_position_mm - 5) + scale_calib_HRRim * i;
         center_axis.push_back(y);
     }
     
@@ -178,9 +179,9 @@ void CalculateHRR::saveCenterdistrib(std::string save_fileName) {
         std::cerr << "Error: Unable to open file for writing" << std::endl;
     }
     
-    for (size_t i = 0; i < result_1D_vec.size(); i++)
+    for (size_t i = 0; i < result_HRR.rows; i++)
     {
-        file << center_axis.at(i) << "," << result_1D_vec.at(i)
+        file << center_axis.at(i) << "," << result_HRR.at<float>(i)
              << std::endl;
     }
     
