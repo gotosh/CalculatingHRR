@@ -216,8 +216,8 @@ int main()
 
     /* +7.5 kV HRR 1*/
     run_all_task(
-        "./image/oh_75Calib/7_5kV_plif_1_oh.tif",
-        "./image/oh_chem/7_5kV_chem_1_oh.tif",
+        "./image/oh_75Calib/7_5kV_plif_2_oh.tif",
+        "./image/oh_chem/7_5kV_chem_2_oh.tif",
         "./scale_oh.json",
         "./image/ch2o_plif/AVG_7_5kv_plif_1.tif",
         "./image/ch2o_chem/AVG_7_5kV_chem.tif",

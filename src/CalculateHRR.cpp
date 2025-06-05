@@ -2,8 +2,6 @@
 
 CalculateHRR::CalculateHRR(Mat& image_plif, Geometry& geometry) : img_plif(image_plif), geometry(geometry)
 {
-    // img_plif = imread(fileName_plif, IMREAD_UNCHANGED);
-    // img_oh = imread(fileName_oh, IMREAD_UNCHANGED);
 }
 
 void CalculateHRR::convert_geometry(const int flame_position, const int horizontal_mm, const int vertical_mm) {
@@ -12,10 +10,15 @@ void CalculateHRR::convert_geometry(const int flame_position, const int horizont
     _vertical_mm = vertical_mm;
     horizontal_pixel_num = static_cast<int>(horizontal_mm / geometry.scale_calibration);
     vertical_pixel_num = static_cast<int>(vertical_mm / geometry.scale_calibration);
+
+    // Cropping 20 times 10 mm image by referencing to flame position 
     img_plif = img_plif(
         Range(flame_position - vertical_pixel_num, flame_position + vertical_pixel_num),
         Range(geometry.burner_center_x - horizontal_pixel_num, geometry.burner_center_x + horizontal_pixel_num)
     );
+
+    // Update the pixel location of the center of cropped image
+    // This values are necessary for further cropping
     _center_aft_crop = horizontal_pixel_num;
     _flame_posi_aft_crop = vertical_pixel_num;
 
@@ -30,7 +33,7 @@ void CalculateHRR::Product_HRR(CalculateHRR& other_class, std::string saved_path
         return; 
     }
     
-    
+    // For making them the same resolution
     if (other_class.geometry.scale_calibration > geometry.scale_calibration)
     {
         resize(other_class.img_plif, other_class.img_plif, img_plif.size(), 0, 0, INTER_CUBIC);
@@ -99,8 +102,7 @@ void CalculateHRR::liner_interp_distribution(int mag) {
             float new_point = 
                 result_1D_vec.at(i) + dydpx * j;
             result_1D_vec.insert(
-                result_1D_vec.begin() + i + j,
-                new_point
+                result_1D_vec.begin() + i + j, new_point
             );
         }
         len_distr = result_1D_vec.size(); // update result vector size 
